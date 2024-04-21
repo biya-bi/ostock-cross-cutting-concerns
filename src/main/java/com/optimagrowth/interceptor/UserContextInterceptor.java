@@ -14,7 +14,10 @@ import org.springframework.http.client.ClientHttpResponse;
 import com.optimagrowth.context.UserContext;
 import com.optimagrowth.context.UserContextHolder;
 
-public class UserContextInterceptor implements ClientHttpRequestInterceptor {
+import feign.RequestInterceptor;
+import feign.RequestTemplate;
+
+public class UserContextInterceptor implements ClientHttpRequestInterceptor, RequestInterceptor {
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
@@ -27,8 +30,21 @@ public class UserContextInterceptor implements ClientHttpRequestInterceptor {
         return execution.execute(request, body);
     }
 
+    @Override
+    public void apply(RequestTemplate template) {
+        var context = UserContextHolder.getContext();
+
+        apply(template, context);
+    }
+
     protected void forwardHeaders(HttpHeaders headers, UserContext context) {
         headers.add(CORRELATION_ID, context.getCorrelationId());
         headers.add(AUTH_TOKEN, context.getAuthToken());
     }
+
+    protected void apply(RequestTemplate template, UserContext context) {
+        template.header(CORRELATION_ID, context.getCorrelationId());
+        template.header(AUTH_TOKEN, context.getAuthToken());
+    }
+
 }
