@@ -9,7 +9,7 @@ import com.optimagrowth.filter.UserContextFilter;
 import com.optimagrowth.interceptor.UserContextInterceptor;
 
 @Configuration
-public class CrossCuttingConcernsConfig {
+public class UserContextConfig {
 
     @LoadBalanced
     @Bean
