@@ -1,9 +1,9 @@
 package com.optimagrowth.filter;
 
-import static com.optimagrowth.http.HeaderNames.AUTH_TOKEN;
 import static com.optimagrowth.http.HeaderNames.CORRELATION_ID;
 import static com.optimagrowth.http.HeaderNames.ORGANIZATION_ID;
 import static com.optimagrowth.http.HeaderNames.USER_ID;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import java.io.IOException;
 
@@ -42,7 +42,7 @@ public class UserContextFilter implements Filter {
 
         context.setCorrelationId(httpServletRequest.getHeader(CORRELATION_ID));
         context.setUserId(httpServletRequest.getHeader(USER_ID));
-        context.setAuthToken(httpServletRequest.getHeader(AUTH_TOKEN));
+        context.setAuthToken(httpServletRequest.getHeader(AUTHORIZATION));
         context.setOrganizationId(httpServletRequest.getHeader(ORGANIZATION_ID));
 
         return context;

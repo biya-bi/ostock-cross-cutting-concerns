@@ -1,11 +1,11 @@
 package com.optimagrowth.interceptor;
 
-import static com.optimagrowth.http.HeaderNames.AUTH_TOKEN;
 import static com.optimagrowth.http.HeaderNames.CORRELATION_ID;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import java.io.IOException;
 
-import org.springframework.http.HttpHeaders;
+import  org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -39,12 +39,12 @@ public class UserContextInterceptor implements ClientHttpRequestInterceptor, Req
 
     protected void forwardHeaders(HttpHeaders headers, UserContext context) {
         headers.add(CORRELATION_ID, context.getCorrelationId());
-        headers.add(AUTH_TOKEN, context.getAuthToken());
+        headers.add(AUTHORIZATION, context.getAuthToken());
     }
 
     protected void apply(RequestTemplate template, UserContext context) {
         template.header(CORRELATION_ID, context.getCorrelationId());
-        template.header(AUTH_TOKEN, context.getAuthToken());
+        template.header(AUTHORIZATION, context.getAuthToken());
     }
 
 }
