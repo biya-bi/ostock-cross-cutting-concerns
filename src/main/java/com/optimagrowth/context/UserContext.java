@@ -9,5 +9,6 @@ public class UserContext {
     private String authToken;
     private String userId;
     private String organizationId;
+    private String language;
 
 }
