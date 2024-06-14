@@ -4,14 +4,13 @@ import static com.optimagrowth.http.HeaderNames.CORRELATION_ID;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import java.io.IOException;
+import java.util.function.BiConsumer;
 
-import  org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
-import com.optimagrowth.context.UserContext;
 import com.optimagrowth.context.UserContextHolder;
 
 import feign.RequestInterceptor;
@@ -23,28 +22,22 @@ public class UserContextInterceptor implements ClientHttpRequestInterceptor, Req
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
             throws IOException {
         var headers = request.getHeaders();
-        var context = UserContextHolder.getContext();
 
-        forwardHeaders(headers, context);
+        applyContext(headers::add);
 
         return execution.execute(request, body);
     }
 
     @Override
     public void apply(RequestTemplate template) {
+        applyContext(template::header);
+    }
+
+    private void applyContext(BiConsumer<String, String> consumer) {
         var context = UserContextHolder.getContext();
 
-        apply(template, context);
-    }
-
-    protected void forwardHeaders(HttpHeaders headers, UserContext context) {
-        headers.add(CORRELATION_ID, context.getCorrelationId());
-        headers.add(AUTHORIZATION, context.getAuthToken());
-    }
-
-    protected void apply(RequestTemplate template, UserContext context) {
-        template.header(CORRELATION_ID, context.getCorrelationId());
-        template.header(AUTHORIZATION, context.getAuthToken());
+        consumer.accept(CORRELATION_ID, context.getCorrelationId());
+        consumer.accept(AUTHORIZATION, context.getAuthToken());
     }
 
 }
