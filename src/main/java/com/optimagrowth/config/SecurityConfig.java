@@ -22,10 +22,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationEntryPoint entryPoint,
             @Nullable @Value("${ostock.api.authentication.allowedEndpoints:#{null}}") String[] allowedEndpoints)
             throws Exception {
-        httpSecurity.authorizeHttpRequests(registry -> authenticated(registry, allowedEndpoints))
-                .oauth2ResourceServer(customizer -> customizer.authenticationEntryPoint(entryPoint)
-                        .jwt(Customizer.withDefaults()));
-        return httpSecurity.build();
+        return httpSecurity
+                .authorizeHttpRequests(registry -> authenticated(registry, allowedEndpoints))
+                .oauth2ResourceServer(configurer -> configurer.authenticationEntryPoint(entryPoint)
+                        .jwt(Customizer.withDefaults()))
+                .build();
     }
 
     @Bean
