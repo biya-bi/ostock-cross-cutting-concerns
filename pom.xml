@@ -17,6 +17,7 @@
 	<properties>
 		<spring-boot.version>3.2.5</spring-boot.version>
 		<spring-cloud.version>2023.0.1</spring-cloud.version>
+		<commons-lang3.version>3.14.0</commons-lang3.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -39,6 +40,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 	</dependencies>
 

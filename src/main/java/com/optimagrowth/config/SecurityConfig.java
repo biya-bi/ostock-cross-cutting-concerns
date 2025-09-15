@@ -1,13 +1,13 @@
 package com.optimagrowth.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.Nullable;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerAuthenticationManagerResolver;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -20,12 +20,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationEntryPoint entryPoint,
-            @Nullable @Value("${ostock.api.authentication.allowedEndpoints:#{null}}") String[] allowedEndpoints)
+            JwtConfig jwtConfig,
+            AuthorizationConfig authorizationConfig)
             throws Exception {
         return httpSecurity
-                .authorizeHttpRequests(registry -> authenticated(registry, allowedEndpoints))
-                .oauth2ResourceServer(configurer -> configurer.authenticationEntryPoint(entryPoint)
-                        .jwt(Customizer.withDefaults()))
+                .authorizeHttpRequests(registry -> authenticated(registry, authorizationConfig))
+                .oauth2ResourceServer(configurer -> configure(entryPoint, configurer, jwtConfig))
                 .build();
     }
 
@@ -36,12 +36,21 @@ public class SecurityConfig {
 
     private AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authenticated(
             AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry,
-            String[] allowedEndpoints) {
-        var matcherRegistry = allowedEndpoints != null
+            AuthorizationConfig authorizationConfig) {
+        var allowedEndpoints = authorizationConfig.getAllowedEndpoints();
+        var matcherRegistry = ObjectUtils.isNotEmpty(allowedEndpoints)
                 ? registry.requestMatchers(allowedEndpoints).permitAll()
                 : registry;
 
         return matcherRegistry.anyRequest().authenticated();
     }
+
+    private OAuth2ResourceServerConfigurer<HttpSecurity> configure(AuthenticationEntryPoint entryPoint,
+            OAuth2ResourceServerConfigurer<HttpSecurity> configurer, JwtConfig jwtConfig) {
+        var resolver = JwtIssuerAuthenticationManagerResolver
+                .fromTrustedIssuers(jwtConfig.getGoogleIssuerUri(), jwtConfig.getKeycloakIssuerUri());
+        return configurer.authenticationEntryPoint(entryPoint).authenticationManagerResolver(resolver);
+    }
+
 
 }
