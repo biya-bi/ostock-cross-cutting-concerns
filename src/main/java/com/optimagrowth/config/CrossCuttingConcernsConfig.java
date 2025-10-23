@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackageClasses = {
-        MessageConfig.class,
         ServletContextConfig.class,
         UserContextConfig.class
 })
