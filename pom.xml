@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.nguiland</groupId>
-		<artifactId>lib-parent</artifactId>
+		<artifactId>nguiland-dependencies</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
@@ -14,21 +14,14 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Cross-cutting Concerns</name>
 	<description>Common library with cross-cutting concerns</description>
-	<properties>
-		<spring-boot.version>3.2.5</spring-boot.version>
-		<spring-cloud.version>2023.0.1</spring-cloud.version>
-		<commons-lang3.version>3.14.0</commons-lang3.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${spring-boot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-			<version>${spring-boot.version}</version>
 		</dependency>
 
 		<dependency>
@@ -45,19 +38,6 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>${commons-lang3.version}</version>
 		</dependency>
 	</dependencies>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>
