@@ -12,7 +12,7 @@
 	<groupId>com.optimagrowth</groupId>
 	<artifactId>cross-cutting-concerns</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Cross-cutting Concerns</name>
+	<name>cross-cutting-concerns</name>
 	<description>Common library with cross-cutting concerns</description>
 	<dependencies>
 		<dependency>
